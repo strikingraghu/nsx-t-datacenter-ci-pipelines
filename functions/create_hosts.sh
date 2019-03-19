@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export FUNCTIONS_DIR=$(cd $PIPELINE_DIR/functions && pwd)
+
 function create_controller_hosts {
   echo "[controllers]" > ctrl_vms
   # outer paren converts string to an array
@@ -184,6 +186,11 @@ EOF
 
   create_edge_hosts
   create_controller_hosts
+  python ${FUNCTIONS_DIR}/create_tenant_resources.py
+
+  cat tenant_edges >> hosts
+  echo "" >> hosts
+  rm tenant_edges
 
   cat ctrl_vms >> hosts
   echo "" >> hosts
